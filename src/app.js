@@ -5,6 +5,8 @@ const helmet = require('helmet');
 const compression = require('compression');
 const rateLimit = require('express-rate-limit');
 const hpp = require('hpp');
+const { default: instanceDatabase } = require('./dbs/init.mongodb.lv100');
+const { checkOverload } = require('./helpers/check.connect');
 
 const app = express();
 
@@ -21,6 +23,10 @@ const limiter = rateLimit({
   max: 100, // limit each IP to 100 requests per windowMs
 });
 app.use(limiter);
+
+// initialize database connection
+instanceDatabase;
+checkOverload();
 
 app.get('/', (req, res, next) => {
   return res.status(200).json({ message: 'Hello, World!' });
