@@ -1,12 +1,12 @@
-const express = require('express');
-const cors = require('cors');
-const morgan = require('morgan');
-const helmet = require('helmet');
-const compression = require('compression');
-const rateLimit = require('express-rate-limit');
-const hpp = require('hpp');
-const { default: instanceDatabase } = require('./dbs/init.mongodb.lv100');
-const { checkOverload } = require('./helpers/check.connect');
+import express from 'express';
+import cors from 'cors';
+import morgan from 'morgan';
+import helmet from 'helmet';
+import compression from 'compression';
+import hpp from 'hpp';
+import rateLimit from 'express-rate-limit';
+import instanceDatabase from './dbs/init.mongodb.lv100.js';
+import router from './routes/index.js';
 
 const app = express();
 
@@ -16,6 +16,8 @@ app.use(morgan('combined'));
 app.use(helmet());
 app.use(compression());
 app.use(hpp());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 // Rate Limiting
 const limiter = rateLimit({
@@ -26,10 +28,8 @@ app.use(limiter);
 
 // initialize database connection
 instanceDatabase;
-checkOverload();
 
-app.get('/', (req, res, next) => {
-  return res.status(200).json({ message: 'Hello, World!' });
-});
+// routes
+app.use('/api/v1', router);
 
-module.exports = app;
+export default app;

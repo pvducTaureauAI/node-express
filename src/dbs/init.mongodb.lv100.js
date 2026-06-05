@@ -1,8 +1,6 @@
-import 'dotenv/config';
 import mongoose from 'mongoose';
 import { countConnections } from '../helpers/check.connect.js';
-
-const URI = process.env.DB_URI || 'mongodb://localhost:27017/myapp';
+import config from '../configs/config.js';
 
 class Database {
   constructor() {
@@ -10,7 +8,7 @@ class Database {
   }
 
   connect() {
-    mongoose.connect(URI)
+    mongoose.connect(config.db.uri)
       .then(() => console.log('MongoDB connected successfully', countConnections()))
       .catch((err) => {
         console.error('MongoDB connection error:', err);
