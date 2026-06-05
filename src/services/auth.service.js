@@ -1,4 +1,6 @@
 import { USER_STATE } from "../common/auth.js";
+import { getFields } from "../common/data.js";
+import { getTokens } from "../helpers/auth.helper.js";
 import userModel from "../models/user.model.js";
 import bcrypt from 'bcrypt';
 
@@ -33,7 +35,8 @@ class AuthService {
             if (!isMatch) {
                 return { success: false, message: 'Invalid username or password', code: 401 };
             }
-            return { success: true, message: 'User logged in successfully!', code: 200 };
+            const tokens = getTokens({ userId: user._id });
+            return { success: true, message: 'User logged in successfully!', code: 200, data: { tokens, user: getFields({ object: user, fields: ['_id', 'username', 'state'] }) } };
         } catch (error) {
             return { success: false, message: 'Login failed', error: error.message, code: 500 };
         }
