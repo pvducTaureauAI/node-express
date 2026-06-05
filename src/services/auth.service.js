@@ -20,6 +20,24 @@ class AuthService {
             return { success: false, message: 'Signup failed', error: error.message, code: 500 };
         }
     }
+
+    static async login({username, password}) {
+        try {
+            // check email exists
+            const user = await userModel.findOne({ username });
+            if (!user) {
+                return { success: false, message: 'Invalid username or password', code: 401 };
+            }
+            // compare password
+            const isMatch = await bcrypt.compare(password, user.password);
+            if (!isMatch) {
+                return { success: false, message: 'Invalid username or password', code: 401 };
+            }
+            return { success: true, message: 'User logged in successfully!', code: 200 };
+        } catch (error) {
+            return { success: false, message: 'Login failed', error: error.message, code: 500 };
+        }
+    }
 }
 
 export default AuthService;
