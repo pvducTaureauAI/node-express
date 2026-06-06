@@ -8,7 +8,7 @@ class AuthService {
     static async signup({username, password}) {
         try {
             // check email exists
-            const holder = await userModel.findOne({ username });
+            const holder = await userModel.findOne({ username }).lean();
             if (holder) {
                 return { success: false, message: 'Username already exists', code: 409 };
             }
@@ -26,7 +26,7 @@ class AuthService {
     static async login({username, password}) {
         try {
             // check email exists
-            const user = await userModel.findOne({ username });
+            const user = await userModel.findOne({ username }).lean();
             if (!user) {
                 return { success: false, message: 'Invalid username or password', code: 401 };
             }
