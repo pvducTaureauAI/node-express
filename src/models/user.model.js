@@ -15,6 +15,14 @@ var userSchema = new mongoose.Schema({
         type:String,
         required:true,
     },
+    twoFactorState:{
+        type:String,
+        enum:['verified','pending'],
+        default:'pending',
+    },
+    twoFactorAuthSecret:{
+        type:String,
+    },
 }, {
     timestamps: true,
 });
